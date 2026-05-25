@@ -12,10 +12,11 @@ const FINAL_COUNTDOWN_MS = 3 * 1000;
 let warningTimer = null;
 let countdownTimer = null;
 let countdownInterval = null;
+let activeResetAt = null;
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message?.type === "trackingStarted") {
-    startTrackingNotice(message.remainingMs);
+    startTrackingNotice(message.remainingMs, message.resetAt);
     sendResponse({ ok: true });
     return true;
   }
@@ -34,7 +35,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   }
 
   if (message?.type === "startClosingCountdown") {
-    startClosingCountdown();
+    startClosingCountdown(message.resetAt);
     sendResponse({ ok: true });
     return true;
   }
@@ -42,9 +43,10 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   return false;
 });
 
-function startTrackingNotice(remainingMs) {
+function startTrackingNotice(remainingMs, resetAt) {
   clearScheduledNotices();
   removeCountdown();
+  activeResetAt = resetAt || null;
 
   showToast(`Tracking started. ${formatDuration(remainingMs)} remaining.`, "info", 4000);
 
@@ -57,16 +59,16 @@ function startTrackingNotice(remainingMs) {
   }
 
   if (remainingMs > FINAL_COUNTDOWN_MS) {
-    countdownTimer = window.setTimeout(startClosingCountdown, remainingMs - FINAL_COUNTDOWN_MS);
+    countdownTimer = window.setTimeout(() => startClosingCountdown(activeResetAt), remainingMs - FINAL_COUNTDOWN_MS);
   } else {
-    startClosingCountdown();
+    startClosingCountdown(activeResetAt);
   }
 }
 
-function startClosingCountdown() {
+function startClosingCountdown(resetAt = activeResetAt) {
   clearScheduledNotices();
   let remaining = 3;
-  renderCountdown(remaining);
+  renderCountdown(remaining, resetAt);
 
   countdownInterval = window.setInterval(() => {
     remaining -= 1;
@@ -78,7 +80,7 @@ function startClosingCountdown() {
       return;
     }
 
-    renderCountdown(remaining);
+    renderCountdown(remaining, resetAt);
   }, 1000);
 }
 
@@ -112,9 +114,23 @@ function showToast(message, tone, durationMs) {
   }, durationMs);
 }
 
-function renderCountdown(seconds) {
+function renderCountdown(seconds, resetAt) {
   const overlay = getOrCreateCountdown();
-  overlay.textContent = `Closing in ${seconds}`;
+  const waitMs = resetAt ? Math.max(0, resetAt - Date.now()) : null;
+
+  overlay.replaceChildren();
+  const title = document.createElement("div");
+  title.className = "time-guard-countdown-title";
+  title.textContent = `Closing in ${seconds}`;
+  overlay.append(title);
+
+  if (waitMs !== null) {
+    const detail = document.createElement("div");
+    detail.className = "time-guard-countdown-detail";
+    detail.textContent = `Wait ${formatLongDuration(waitMs)} to use social media again.`;
+    overlay.append(detail);
+  }
+
   overlay.hidden = false;
 }
 
@@ -185,11 +201,27 @@ function injectStyles() {
       z-index: 2147483647;
       display: grid;
       place-items: center;
+      align-content: center;
+      gap: 18px;
       background: rgba(12, 14, 16, 0.72);
       color: #ffffff;
-      font: 800 clamp(42px, 9vw, 96px)/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       letter-spacing: 0;
       text-align: center;
+      padding: 24px;
+    }
+
+    #${OVERLAY_ID} .time-guard-countdown-title {
+      font-size: clamp(42px, 9vw, 96px);
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    #${OVERLAY_ID} .time-guard-countdown-detail {
+      max-width: min(620px, calc(100vw - 48px));
+      font-size: clamp(18px, 3vw, 28px);
+      font-weight: 650;
+      line-height: 1.25;
     }
 
     #${TOAST_ID}[hidden],
@@ -204,6 +236,21 @@ function formatDuration(ms) {
   const totalSeconds = Math.max(0, Math.ceil(ms / 1000));
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}
+
+function formatLongDuration(ms) {
+  const totalSeconds = Math.max(0, Math.ceil(ms / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
+  }
+
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 })();

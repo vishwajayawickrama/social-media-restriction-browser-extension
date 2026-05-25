@@ -26,11 +26,13 @@ async function render() {
   }
 
   if (status.blocked) {
-    metricLabel.textContent = "Blocked until";
-    timeValue.textContent = formatClock(status.resetAt);
+    const waitMs = Math.max(0, status.resetAt - Date.now());
+
+    metricLabel.textContent = "Wait";
+    timeValue.textContent = formatLongDuration(waitMs);
     stateBadge.textContent = "Blocked";
     stateBadge.className = "badge danger";
-    details.textContent = "Social media tabs will close until the reset time.";
+    details.textContent = "Wait for the timer above before using social media again.";
     return;
   }
 
@@ -71,4 +73,19 @@ function formatClock(timestamp) {
     hour: "numeric",
     minute: "2-digit"
   }).format(new Date(timestamp));
+}
+
+function formatLongDuration(ms) {
+  const totalSeconds = Math.max(0, Math.ceil(ms / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
+  }
+
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }

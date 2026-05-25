@@ -233,7 +233,8 @@ async function refreshActiveTracking(options = {}) {
     await safeSendTabMessage(activeTab.id, {
       type: "trackingStarted",
       remainingMs,
-      limitMs
+      limitMs,
+      resetAt: state.windowStart + RESET_INTERVAL_MS
     });
   }
 }

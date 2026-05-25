@@ -13,6 +13,7 @@ A Chromium Manifest V3 extension that limits active social media browsing time.
 - A small in-page toast appears when tracking starts.
 - A warning appears when 1 minute remains.
 - A visible `3`, `2`, `1` countdown appears before tracked tabs close.
+- When blocked, the popup shows how long to wait before social media is available again.
 
 ## Default Tracked Domains
 
