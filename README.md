@@ -2,6 +2,8 @@
 
 A Chromium Manifest V3 extension that limits active social media browsing time.
 
+Version: `0.1.0.alpha.1`
+
 ## Behavior
 
 - Default allowance: 5 minutes.
