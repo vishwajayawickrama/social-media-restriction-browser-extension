@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Social Media Time Guard Settings</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="options">
+    <main>
+      <header>
+        <div>
+          <h1>Settings</h1>
+          <p class="muted">Configure the shared social media time limit.</p>
+        </div>
+      </header>
+
+      <form id="settingsForm">
+        <label>
+          <span>Time limit in minutes</span>
+          <input id="limitMinutes" type="number" min="1" step="1" required>
+        </label>
+
+        <label>
+          <span>Tracked domains</span>
+          <textarea id="domains" rows="12" spellcheck="false" required></textarea>
+        </label>
+
+        <div class="actions">
+          <button type="submit">Save</button>
+          <span id="message" role="status"></span>
+        </div>
+      </form>
+    </main>
+    <script src="options.js"></script>
+  </body>
+</html>

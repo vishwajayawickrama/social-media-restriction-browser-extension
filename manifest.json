@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Social Media Time Guard",
+  "version": "1.0.0",
+  "description": "Limits active social media browsing time and blocks access until the next reset window.",
+  "permissions": ["alarms", "scripting", "storage", "tabs"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Social Media Time Guard"
+  },
+  "options_page": "options.html"
+}

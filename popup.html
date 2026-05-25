@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Social Media Time Guard</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="popup">
+    <main>
+      <header>
+        <h1>Time Guard</h1>
+        <span id="stateBadge" class="badge">Loading</span>
+      </header>
+
+      <section class="metric">
+        <span id="metricLabel">Remaining</span>
+        <strong id="timeValue">--:--</strong>
+      </section>
+
+      <p id="details" class="muted">Checking the current tab.</p>
+
+      <button id="optionsButton" type="button">Settings</button>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>
