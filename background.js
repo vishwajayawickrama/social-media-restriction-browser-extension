@@ -8,11 +8,12 @@ const DEFAULT_SETTINGS = {
     "reddit.com",
     "x.com",
     "twitter.com",
-    "youtube.com",
     "snapchat.com",
     "pinterest.com"
   ]
 };
+
+const REMOVED_DOMAINS = new Set(["youtube.com"]);
 
 const DEFAULT_STATE = {
   windowStart: null,
@@ -442,7 +443,7 @@ function normalizeLimit(value) {
 
 function normalizeDomains(domains) {
   const source = Array.isArray(domains) ? domains : DEFAULT_SETTINGS.domains;
-  const normalized = source.map(normalizeDomain).filter(Boolean);
+  const normalized = source.map(normalizeDomain).filter((domain) => domain && !REMOVED_DOMAINS.has(domain));
   return [...new Set(normalized)];
 }
 

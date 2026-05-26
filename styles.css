@@ -1,12 +1,15 @@
 :root {
   color-scheme: light dark;
-  --bg: #f7f7f4;
+  --bg: #f4f7fb;
   --surface: #ffffff;
+  --surface-raised: #f9fbfd;
   --text: #1c1f23;
-  --muted: #666f7a;
-  --border: #d9ddd7;
-  --primary: #176b52;
+  --muted: #687382;
+  --border: #dce3ec;
+  --primary: #19715b;
+  --primary-strong: #135645;
   --primary-text: #ffffff;
+  --accent: #2b7fff;
   --warning-bg: #fff0ca;
   --warning-text: #6b4a00;
   --danger-bg: #fde1df;
@@ -17,11 +20,14 @@
   :root {
     --bg: #17191b;
     --surface: #202326;
+    --surface-raised: #252a2f;
     --text: #f1f3f2;
     --muted: #a5adb5;
     --border: #363b3f;
     --primary: #4fae8c;
+    --primary-strong: #68c9a5;
     --primary-text: #07120e;
+    --accent: #6aa6ff;
     --warning-bg: #4a390f;
     --warning-text: #ffdc76;
     --danger-bg: #4d1f1c;
@@ -45,30 +51,65 @@ main {
 }
 
 .popup main {
-  width: 320px;
-  padding: 16px;
+  width: 360px;
+  padding: 18px;
 }
 
 .options main {
-  width: min(720px, calc(100vw - 32px));
+  width: min(780px, calc(100vw - 32px));
   margin: 32px auto;
-  padding: 24px;
+  padding: 28px;
   border: 1px solid var(--border);
   border-radius: 8px;
+  box-shadow: 0 20px 50px rgba(20, 35, 55, 0.08);
 }
 
-header {
+.app-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 h1 {
   margin: 0;
-  font-size: 20px;
+  font-size: 22px;
   line-height: 1.2;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 12px;
+}
+
+.brand img {
+  flex: 0 0 auto;
+  display: block;
+  border-radius: 8px;
+}
+
+.brand p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.options .brand p:not(.eyebrow) {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.eyebrow {
+  color: var(--accent) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em;
+  margin-bottom: 3px !important;
+  text-transform: uppercase;
 }
 
 .muted {
@@ -79,10 +120,11 @@ h1 {
 .badge {
   flex: 0 0 auto;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: 8px;
   color: var(--muted);
-  padding: 4px 9px;
+  padding: 5px 10px;
   font-size: 12px;
+  font-weight: 700;
 }
 
 .badge.warning {
@@ -98,9 +140,23 @@ h1 {
 }
 
 .metric {
+  position: relative;
   display: grid;
   gap: 4px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  padding: 16px;
+  overflow: hidden;
+}
+
+.metric::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: var(--primary);
 }
 
 .metric span {
@@ -110,7 +166,7 @@ h1 {
 }
 
 .metric strong {
-  font-size: 40px;
+  font-size: 46px;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
@@ -128,9 +184,17 @@ button {
   padding: 8px 14px;
 }
 
+button:hover {
+  background: var(--primary-strong);
+}
+
 .popup button {
   width: 100%;
   margin-top: 16px;
+}
+
+.primary-action {
+  min-height: 44px;
 }
 
 form {
@@ -144,6 +208,13 @@ label {
   font-weight: 650;
 }
 
+.field-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  padding: 16px;
+}
+
 input,
 textarea {
   width: 100%;
@@ -153,6 +224,13 @@ textarea {
   color: var(--text);
   font: inherit;
   padding: 10px 12px;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+  outline: none;
 }
 
 textarea {

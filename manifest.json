@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Social Media Time Guard",
+  "name": "Nuan",
   "version": "0.1.0",
   "version_name": "0.1.0.alpha.1",
-  "description": "Limits active social media browsing time and blocks access until the next reset window.",
+  "description": "Reclaim the present by limiting active social media browsing time.",
   "permissions": ["alarms", "scripting", "storage", "tabs"],
   "host_permissions": ["<all_urls>"],
   "background": {
@@ -30,7 +30,7 @@
       "128": "icons/icon128.png"
     },
     "default_popup": "popup.html",
-    "default_title": "Social Media Time Guard"
+    "default_title": "Nuan"
   },
   "options_page": "options.html"
 }

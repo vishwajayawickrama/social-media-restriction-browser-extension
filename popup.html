@@ -3,13 +3,19 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Social Media Time Guard</title>
+    <title>Nuan</title>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body class="popup">
     <main>
-      <header>
-        <h1>Time Guard</h1>
+      <header class="app-header">
+        <div class="brand">
+          <img src="icons/logo.svg" alt="" width="40" height="40">
+          <div>
+            <h1>Nuan</h1>
+            <p>Reclaim the present</p>
+          </div>
+        </div>
         <span id="stateBadge" class="badge">Loading</span>
       </header>
 
@@ -20,7 +26,7 @@
 
       <p id="details" class="muted">Checking the current tab.</p>
 
-      <button id="optionsButton" type="button">Settings</button>
+      <button id="optionsButton" class="primary-action" type="button">Settings</button>
     </main>
     <script src="popup.js"></script>
   </body>

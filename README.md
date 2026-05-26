@@ -1,4 +1,6 @@
-# Social Media Time Guard
+# Nuan
+
+Reclaim the present.
 
 A Chromium Manifest V3 extension that limits active social media browsing time.
 
@@ -26,7 +28,6 @@ Version: `0.1.0.alpha.1`
 - reddit.com
 - x.com
 - twitter.com
-- youtube.com
 - snapchat.com
 - pinterest.com
 

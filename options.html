@@ -3,25 +3,29 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Social Media Time Guard Settings</title>
+    <title>Nuan Settings</title>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body class="options">
     <main>
-      <header>
-        <div>
-          <h1>Settings</h1>
-          <p class="muted">Configure the shared social media time limit.</p>
+      <header class="app-header">
+        <div class="brand">
+          <img src="icons/logo.svg" alt="" width="48" height="48">
+          <div>
+            <p class="eyebrow">Nuan</p>
+            <h1>Settings</h1>
+            <p>Reclaim the present with a shared time limit and tracked websites.</p>
+          </div>
         </div>
       </header>
 
       <form id="settingsForm">
-        <label>
+        <label class="field-card">
           <span>Time limit in minutes</span>
           <input id="limitMinutes" type="number" min="1" step="1" required>
         </label>
 
-        <label>
+        <label class="field-card">
           <span>Tracked domains</span>
           <textarea id="domains" rows="12" spellcheck="false" required></textarea>
         </label>
