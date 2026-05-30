@@ -7,6 +7,7 @@
   - total social media time per day
   - streak of days without tracked social media use
   - most-used tracked domains
+- Have warning when visits socail media site in the blocked time addition to the closing the tab.
 
 ## Engineering
 
