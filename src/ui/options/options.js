@@ -8,6 +8,7 @@ const SUGGESTED_DOMAINS = [
   "twitter.com",
   "snapchat.com",
   "pinterest.com",
+  "youtube.com",
   "threads.net",
   "bsky.app",
   "discord.com",
@@ -17,17 +18,28 @@ const SUGGESTED_DOMAINS = [
 
 const form = document.getElementById("settingsForm");
 const limitMinutes = document.getElementById("limitMinutes");
+const decreaseLimit = document.getElementById("decreaseLimit");
+const increaseLimit = document.getElementById("increaseLimit");
 const domains = document.getElementById("domains");
 const domainInput = document.getElementById("domainInput");
 const addDomainButton = document.getElementById("addDomainButton");
 const selectedDomains = document.getElementById("selectedDomains");
 const availableDomains = document.getElementById("availableDomains");
 const domainCount = document.getElementById("domainCount");
+const confirmModal = document.getElementById("confirmModal");
+const confirmMessage = document.getElementById("confirmMessage");
+const cancelRemoveDomain = document.getElementById("cancelRemoveDomain");
+const confirmRemoveDomain = document.getElementById("confirmRemoveDomain");
 const message = document.getElementById("message");
+const toast = document.getElementById("toast");
 
 let activeDomains = [];
+let pendingRemovalDomain = "";
+let toastTimeout = 0;
 
 loadSettings();
+decreaseLimit.append(createIcon("minus"));
+increaseLimit.append(createIcon("plus"));
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -45,14 +57,16 @@ form.addEventListener("submit", async (event) => {
   if (!response.ok) {
     message.textContent = response.error;
     message.className = "error";
+    showToast(response.error, "error");
     return;
   }
 
   limitMinutes.value = response.settings.limitMinutes;
   activeDomains = response.settings.domains;
   renderDomains();
-  message.textContent = "Saved";
-  message.className = "success";
+  message.textContent = "";
+  message.className = "";
+  showToast("Settings saved", "success");
 });
 
 addDomainButton.addEventListener("click", () => {
@@ -63,6 +77,38 @@ domainInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     event.preventDefault();
     addDomain(domainInput.value);
+  }
+});
+
+decreaseLimit.addEventListener("click", () => {
+  stepLimit(-1);
+});
+
+increaseLimit.addEventListener("click", () => {
+  stepLimit(1);
+});
+
+cancelRemoveDomain.addEventListener("click", closeRemoveModal);
+
+confirmRemoveDomain.addEventListener("click", () => {
+  if (!pendingRemovalDomain) {
+    return;
+  }
+
+  activeDomains = activeDomains.filter((activeDomain) => activeDomain !== pendingRemovalDomain);
+  renderDomains();
+  closeRemoveModal();
+});
+
+confirmModal.addEventListener("click", (event) => {
+  if (event.target === confirmModal) {
+    closeRemoveModal();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !confirmModal.hidden) {
+    closeRemoveModal();
   }
 });
 
@@ -95,8 +141,7 @@ function createSelectedChip(domain) {
   chip.append(icon);
 
   chip.addEventListener("click", () => {
-    activeDomains = activeDomains.filter((activeDomain) => activeDomain !== domain);
-    renderDomains();
+    openRemoveModal(domain);
   });
 
   return chip;
@@ -150,8 +195,38 @@ function syncDomainsField() {
   domains.value = activeDomains.join("\n");
 }
 
-function createChipIcon(name) {
+function stepLimit(direction) {
+  const currentValue = Number.parseInt(limitMinutes.value, 10);
+  const current = Number.isFinite(currentValue) ? currentValue : 1;
+  limitMinutes.value = Math.max(1, current + direction);
+}
+
+function openRemoveModal(domain) {
+  pendingRemovalDomain = domain;
+  confirmMessage.textContent = `${domain} will stop counting toward your browsing limit after you save.`;
+  confirmModal.hidden = false;
+  confirmRemoveDomain.focus();
+}
+
+function closeRemoveModal() {
+  pendingRemovalDomain = "";
+  confirmModal.hidden = true;
+}
+
+function showToast(text, variant = "success") {
+  window.clearTimeout(toastTimeout);
+  toast.textContent = text;
+  toast.className = `toast ${variant}`;
+  toast.hidden = false;
+
+  toastTimeout = window.setTimeout(() => {
+    toast.hidden = true;
+  }, 2600);
+}
+
+function createIcon(name) {
   const paths = {
+    minus: ["M5 12h14"],
     plus: ["M5 12h14", "M12 5v14"],
     x: ["M18 6 6 18", "M6 6l12 12"]
   };
@@ -173,4 +248,8 @@ function createChipIcon(name) {
 
   icon.append(svg);
   return icon;
+}
+
+function createChipIcon(name) {
+  return createIcon(name);
 }

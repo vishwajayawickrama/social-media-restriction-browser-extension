@@ -13,7 +13,7 @@ const DEFAULT_SETTINGS = {
   ]
 };
 
-const REMOVED_DOMAINS = new Set(["youtube.com"]);
+const REMOVED_DOMAINS = new Set();
 
 const DEFAULT_STATE = {
   windowStart: null,
@@ -363,7 +363,7 @@ async function safeSendTabMessage(tabId, message) {
   try {
     await chrome.scripting.executeScript({
       target: { tabId },
-      files: ["content.js"]
+      files: ["src/content/content.js"]
     });
     return await chrome.tabs.sendMessage(tabId, message);
   } catch (_error) {
