@@ -60,6 +60,7 @@ Version: `0.1.0.alpha.1`
 ```
 
 See [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md) for entry points and ownership notes.
+See [docs/CHROME_WEB_STORE_PUBLISHING.md](docs/CHROME_WEB_STORE_PUBLISHING.md) for Chrome Web Store packaging and submission steps.
 
 ## Load in Chromium
 
